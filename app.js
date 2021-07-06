@@ -112,19 +112,81 @@ function onGalleryLightboxClick(event) {
   const imageInModalWindow = document.querySelector('.lightbox__image');
   imageInModalWindow.setAttribute('src', `${originalImage}`);
 
-};
+  //Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо"
+  window.addEventListener('keydown', onArrowRightKeyPress);
+
+  function onArrowRightKeyPress(event) {
+    const ARROWRIGHT_KEY_CODE = 'ArrowRight';
+    console.log(event.code);
+    const isArrowRightKey = event.code === ARROWRIGHT_KEY_CODE;
+
+    //вариант 1
+      // if (isArrowRightKey) {
+      // const imageInModal = event.target;
+      // console.log(imageElement);
+      // //imageInModalNextSibling = imageInModal.nextElementSibling;
+      // const ancestorElement = imageInModal.parentNode.parentNode;
+      // console.log(ancestorElement);
+      // const childrenElements = ancestorElement.children;
+      //   console.log(childrenElements);
+      //   [...childrenElements].map(elem => {
+          
+      //     const imgElem = elem.firstElementChild.firstElementChild;
+      //     console.log(imgElem);
+      //     const originalImgElem = imgElem.getAttribute('data-source');
+      // console.log(originalImgElem);
+      // imageInModalWindow.setAttribute('src', `${originalImgElem}`);
+      //   });
+    // }
+
+    //вариант 2
+     console.log(imageInModalWindow);
+     if (isArrowRightKey) {
+      //const imageInModal = event.target;
+      console.log(imageElement);
+      //imageInModalNextSibling = imageInModal.nextElementSibling;
+      const imageElementNextSibling = imageElement.parentNode.parentNode.nextElementSibling.firstElementChild.firstElementChild;
+      console.log(imageElementNextSibling);
+      const originalImageElementNextSibling = imageElementNextSibling.getAttribute('data-source');
+      console.log(originalImageElementNextSibling);
+       imageInModalWindow.setAttribute('src', `${originalImageElementNextSibling}`);
+       console.log(imageInModalWindow);
+    }
+
+    }
+
+  };
 
 //Закрытие модального окна по клику на кнопку button[data-action="close-lightbox"]
 const buttonModalClose = document.querySelector('button[data-action="close-lightbox"]');
 console.log(buttonModalClose);
-buttonModalClose.addEventListener('click', closeGalleryLightboxClick)
-function closeGalleryLightboxClick(event) {
+buttonModalClose.addEventListener('click', onCloseModal)
+function onCloseModal(event) {
   const modalContainerOpen = document.querySelector('.lightbox.is-open');
   modalContainerOpen.classList.remove('is-open');
    const imageInModalWindow = document.querySelector('.lightbox__image');
   imageInModalWindow.setAttribute('src', '');
+};
+
+//Закрытие модального окна по клику на div.lightbox__overlay.
+const overlayElement = document.querySelector('.lightbox__overlay');
+console.log(overlayElement);
+overlayElement.addEventListener('click', onCloseModal);
+
+//Закрытие модального окна по нажатию клавиши ESC
+window.addEventListener('keydown', onEscKeyPress);
+
+function onEscKeyPress(event) {
+  const ESC_KEY_CODE = 'Escape';
+  console.log(event.code);
+  const isEscKey = event.code === ESC_KEY_CODE;
+
+  if (isEscKey) {
+    onCloseModal();
+  }
 }
- 
+
+
 // }
 
 // //ссылка на модальное окно
@@ -154,3 +216,5 @@ function closeGalleryLightboxClick(event) {
 // const a = document.querySelector('.gallery__image')
 // a.setAttribute('src', '');
 //   console.log(a);
+
+
