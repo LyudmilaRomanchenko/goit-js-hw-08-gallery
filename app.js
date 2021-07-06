@@ -63,3 +63,94 @@ const galleryItems = [
     description: 'Lighthouse Coast Sea',
   },
 ];
+
+const gallerryContainer = document.querySelector('.js-gallery');
+console.log(gallerryContainer);
+
+gallerryContainer.insertAdjacentHTML('afterbegin', createGalleryCardMarkup(galleryItems));
+
+gallerryContainer.addEventListener('click', onGalleryLightboxClick);
+
+function createGalleryCardMarkup(galleryItems) {
+  return galleryItems.map(({ preview, original, description }) => {
+    return `<li class="gallery__item">
+  <a
+    class="gallery__link"
+    href="${original}"
+  >
+    <img
+      class="gallery__image"
+      src="${preview}"
+      data-source="${original}"
+      alt="${description}"
+    />
+  </a>
+</li>`;
+  }).join('');
+};
+
+function onGalleryLightboxClick(event) {
+  const isLinkElement = event.target.classList.contains('gallery__image');
+  if (!isLinkElement) {
+    return;
+  }
+
+  //запретить браузеру переходить по ссылке картинки
+  event.preventDefault();
+
+  //открытие модального окна
+  const modalContainer = document.querySelector('.js-lightbox');
+  modalContainer.classList.add('is-open');
+  console.log(modalContainer);
+
+  //получение url большого изображения
+  const imageElement = event.target;
+  console.log(imageElement);
+  const originalImage = imageElement.getAttribute('data-source');
+  
+  //Подмена значения атрибута src элемента img.lightbox__image.
+  const imageInModalWindow = document.querySelector('.lightbox__image');
+  imageInModalWindow.setAttribute('src', `${originalImage}`);
+
+};
+
+//Закрытие модального окна по клику на кнопку button[data-action="close-lightbox"]
+const buttonModalClose = document.querySelector('button[data-action="close-lightbox"]');
+console.log(buttonModalClose);
+buttonModalClose.addEventListener('click', closeGalleryLightboxClick)
+function closeGalleryLightboxClick(event) {
+  const modalContainerOpen = document.querySelector('.lightbox.is-open');
+  modalContainerOpen.classList.remove('is-open');
+   const imageInModalWindow = document.querySelector('.lightbox__image');
+  imageInModalWindow.setAttribute('src', '');
+}
+ 
+// }
+
+// //ссылка на модальное окно
+// function addActivClass(modalContainer) {
+//   modalContainer.classList.add('is-open');
+// }
+
+////////////////
+
+//  //получение url большого изображения
+//   const imageElement = document.querySelector('.gallery__image')
+//   //const originalImage = imageElement.dataset.sourse;
+// const originalImage = imageElement.getAttribute('data-source');
+
+// console.log(imageElement);
+// console.log(originalImage);
+
+//   //Подмена значения атрибута src элемента img.lightbox__image.
+//   const imageInModalWindow = document.querySelector('img.lightbox__image');
+//   const a = imageInModalWindow.setAttribute('src', `${originalImage}`);
+// console.log(imageInModalWindow);
+// console.log(imageInModalWindow);
+
+//  const modalContainer = document.querySelector('.lightbox');
+// modalContainer.classList.add('is-open');
+// console.log(modalContainer);
+// const a = document.querySelector('.gallery__image')
+// a.setAttribute('src', '');
+//   console.log(a);
