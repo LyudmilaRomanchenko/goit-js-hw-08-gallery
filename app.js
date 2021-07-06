@@ -104,7 +104,7 @@ function onGalleryLightboxClick(event) {
   console.log(modalContainer);
 
   //получение url большого изображения
-  const imageElement = event.target;
+  let imageElement = event.target;
   console.log(imageElement);
   const originalImage = imageElement.getAttribute('data-source');
   
@@ -113,32 +113,13 @@ function onGalleryLightboxClick(event) {
   imageInModalWindow.setAttribute('src', `${originalImage}`);
 
   //Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо"
+  //вправо
   window.addEventListener('keydown', onArrowRightKeyPress);
 
   function onArrowRightKeyPress(event) {
     const ARROWRIGHT_KEY_CODE = 'ArrowRight';
     console.log(event.code);
     const isArrowRightKey = event.code === ARROWRIGHT_KEY_CODE;
-
-    //вариант 1
-      // if (isArrowRightKey) {
-      // const imageInModal = event.target;
-      // console.log(imageElement);
-      // //imageInModalNextSibling = imageInModal.nextElementSibling;
-      // const ancestorElement = imageInModal.parentNode.parentNode;
-      // console.log(ancestorElement);
-      // const childrenElements = ancestorElement.children;
-      //   console.log(childrenElements);
-      //   [...childrenElements].map(elem => {
-          
-      //     const imgElem = elem.firstElementChild.firstElementChild;
-      //     console.log(imgElem);
-      //     const originalImgElem = imgElem.getAttribute('data-source');
-      // console.log(originalImgElem);
-      // imageInModalWindow.setAttribute('src', `${originalImgElem}`);
-      //   });
-    // }
-
     //вариант 2
      console.log(imageInModalWindow);
      if (isArrowRightKey) {
@@ -151,9 +132,12 @@ function onGalleryLightboxClick(event) {
       console.log(originalImageElementNextSibling);
        imageInModalWindow.setAttribute('src', `${originalImageElementNextSibling}`);
        console.log(imageInModalWindow);
+       imageElement = imageElementNextSibling;
     }
+  };
 
-    }
+  //влево
+  
 
   };
 
@@ -186,7 +170,26 @@ function onEscKeyPress(event) {
   }
 }
 
-
+//////////////////
+  //вариант 1
+      // if (isArrowRightKey) {
+      // const imageInModal = event.target;
+      // console.log(imageElement);
+      // //imageInModalNextSibling = imageInModal.nextElementSibling;
+      // const ancestorElement = imageInModal.parentNode.parentNode;
+      // console.log(ancestorElement);
+      // const childrenElements = ancestorElement.children;
+      //   console.log(childrenElements);
+      //   [...childrenElements].map(elem => {
+          
+      //     const imgElem = elem.firstElementChild.firstElementChild;
+      //     console.log(imgElem);
+      //     const originalImgElem = imgElem.getAttribute('data-source');
+      // console.log(originalImgElem);
+      // imageInModalWindow.setAttribute('src', `${originalImgElem}`);
+      //   });
+    // }
+    //////////////////////////////
 // }
 
 // //ссылка на модальное окно
