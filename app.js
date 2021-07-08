@@ -89,7 +89,8 @@ function createGalleryCardMarkup(galleryItems) {
   }).join('');
 };
 
-
+const imageInModalWindow = document.querySelector('.lightbox__image');
+let imageElement;
 function onGalleryLightboxClick(event) {
   const isLinkElement = event.target.classList.contains('gallery__image');
   if (!isLinkElement) {
@@ -100,12 +101,11 @@ function onGalleryLightboxClick(event) {
   event.preventDefault();
 
   //получение url большого изображения
-  let imageElement = event.target;
+  imageElement = event.target;
   //console.log(imageElement);
   const originalImage = imageElement.getAttribute('data-source');
   
   //Подмена значения атрибута src элемента img.lightbox__image.
-  const imageInModalWindow = document.querySelector('.lightbox__image');
   imageInModalWindow.setAttribute('src', `${originalImage}`);
 
   //открытие модального окна
@@ -114,88 +114,93 @@ function onGalleryLightboxClick(event) {
   // Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо"
   onArrowRight();
   onArrowLeft();
+};
 
   // Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо"
-  // вправо
-  function onArrowRight() {
-    window.addEventListener('keydown', onArrowRightKeyPress);
+//   // вправо
+function onArrowRight() {
+  window.addEventListener('keydown', onArrowRightKeyPress);
+};
 
-    function onArrowRightKeyPress(event) {
-      const ARROWRIGHT_KEY_CODE = 'ArrowRight';
-      //console.log(event.code);
-      const isArrowRightKey = event.code === ARROWRIGHT_KEY_CODE;
+function onArrowRightKeyPress(event) {
+    const ARROWRIGHT_KEY_CODE = 'ArrowRight';
+    //console.log(event.code);
+    const isArrowRightKey = event.code === ARROWRIGHT_KEY_CODE;
+    //console.log(imageInModalWindow);
+  if (isArrowRightKey) {
+    const imageElementNextSiblingLast = imageElement.parentNode.parentNode.nextElementSibling;
+    if (imageElementNextSiblingLast === null) {
+      onCloseModal();
+      }
+    else {
+      //console.log(imageElement);
+      let imageElementNextSibling = imageElement.parentNode.parentNode.nextElementSibling.firstElementChild.firstElementChild;
+      //console.log(imageElementNextSibling);
+      const originalImageElementNextSibling = imageElementNextSibling.getAttribute('data-source');
+      //console.log(originalImageElementNextSibling);
+      imageInModalWindow.setAttribute('src', `${originalImageElementNextSibling}`);
       //console.log(imageInModalWindow);
-      if (isArrowRightKey) {
-        //console.log(imageElement);
-        const imageElementNextSibling = imageElement.parentNode.parentNode.nextElementSibling.firstElementChild.firstElementChild;
-        //console.log(imageElementNextSibling);
-        const originalImageElementNextSibling = imageElementNextSibling.getAttribute('data-source');
-        //console.log(originalImageElementNextSibling);
-        imageInModalWindow.setAttribute('src', `${originalImageElementNextSibling}`);
-        //console.log(imageInModalWindow);
-        imageElement = imageElementNextSibling;
-      };
-    };
+      imageElement = imageElementNextSibling;
+    }   
   };
+};
 
-  //влево
-  function onArrowLeft() {
-    window.addEventListener('keydown', onArrowLeftKeyPress);
+// //влево
+function onArrowLeft() {
+  window.addEventListener('keydown', onArrowLeftKeyPress);
 
-    function onArrowLeftKeyPress(event) {
-      const ARROWLEFT_KEY_CODE = 'ArrowLeft';
+};
+
+function onArrowLeftKeyPress(event) {
+    const ARROWLEFT_KEY_CODE = 'ArrowLeft';
       //console.log(event.code);
-      const isArrowLeftKey = event.code === ARROWLEFT_KEY_CODE;
+    const isArrowLeftKey = event.code === ARROWLEFT_KEY_CODE;
       //console.log(imageInModalWindow);
-      if (isArrowLeftKey) {
-        //console.log(imageElement);
-        const imageElementPreviousSibling = imageElement.parentNode.parentNode.previousElementSibling.firstElementChild.firstElementChild;
-        //console.log(imageElementPreviousSibling);
-        const originalImageElementPreviousSibling = imageElementPreviousSibling.getAttribute('data-source');
+    
+  if (isArrowLeftKey) {
+    const imageElementPreviousSiblingLast = imageElement.parentNode.parentNode.previousElementSibling;
+    if (imageElementPreviousSiblingLast === null) {
+      onCloseModal();
+    }
+    else {
+      const imageElementPreviousSibling = imageElement.parentNode.parentNode.previousElementSibling.firstElementChild.firstElementChild;
+      //console.log(imageElementPreviousSibling);
+      const originalImageElementPreviousSibling = imageElementPreviousSibling.getAttribute('data-source');
         //console.log(originalImageElementPreviousSibling);
-        imageInModalWindow.setAttribute('src', `${originalImageElementPreviousSibling}`);
+      imageInModalWindow.setAttribute('src', `${originalImageElementPreviousSibling}`);
         //console.log(imageInModalWindow);
-        imageElement = imageElementPreviousSibling;
-      };
-    };
+      imageElement = imageElementPreviousSibling;
+    }
   };
 };
 
 // Открытие модального окна
+const modalContainer = document.querySelector('.js-lightbox');
 function onModalOpen() {
-  const modalContainer = document.querySelector('.js-lightbox');
   modalContainer.classList.add('is-open');
   //console.log(modalContainer);
 };
 
 // Закрытие модального окна
-onModalCloveButton();
-onModalCloveOverlay();
 onModalCloveEsc();
 
 // Закрытие модального окна - реализация
 function onCloseModal(event) {
-  const modalContainerOpen = document.querySelector('.lightbox.is-open');
-  modalContainerOpen.classList.remove('is-open');
+  modalContainer.classList.remove('is-open');
 
   // Очистка значения атрибута src элемента img.lightbox__image. Это необходимо для того, чтобы при следующем открытии модального окна, пока грузится изображение, мы не видели предыдущее.
-  const imageInModalWindow = document.querySelector('.lightbox__image');
   imageInModalWindow.setAttribute('src', '');
 };
   
 // * Закрытие модального окна по клику на кнопку button[data-action="close-lightbox"]
-function onModalCloveButton() {
-  const buttonModalClose = document.querySelector('button[data-action="close-lightbox"]');
-  console.log(buttonModalClose);
-  buttonModalClose.addEventListener('click', onCloseModal);
-};
+const buttonModalClose = document.querySelector('button[data-action="close-lightbox"]');
+//console.log(buttonModalClose);
+buttonModalClose.addEventListener('click', onCloseModal);
 
 // * Закрытие модального окна по клику на div.lightbox__overlay.
-function onModalCloveOverlay() {
-  const overlayElement = document.querySelector('.lightbox__overlay');
-  //console.log(overlayElement);
-  overlayElement.addEventListener('click', onCloseModal);
-};
+const overlayElement = document.querySelector('.lightbox__overlay');
+//console.log(overlayElement);
+overlayElement.addEventListener('click', onCloseModal);
 
 // * Закрытие модального окна по нажатию клавиши ESC
 function onModalCloveEsc() {
@@ -208,7 +213,10 @@ function onModalCloveEsc() {
 
     if (isEscKey) {
       onCloseModal();
-    }
-  }
+    };
+  };
 };
+
+
+
 
